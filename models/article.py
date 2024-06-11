@@ -3,7 +3,7 @@ from models.author import Author
 from models.magazine import Magazine
 
 class Article:
-    def __init__(self, title, content, author, magazine):  # Corrected __init_ method
+    def __init__(self, title, content, author, magazine): 
         self._title = title
         self._content = content
         self._author = author

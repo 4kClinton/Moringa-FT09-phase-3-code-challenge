@@ -1,7 +1,7 @@
 from database.connection import get_db_connection
 
 class Author:
-    def __init__(self, name):  # Corrected __init_ method
+    def __init__(self, name): 
         self._name = name
         self._id = None
 

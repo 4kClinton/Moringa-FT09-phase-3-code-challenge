@@ -8,7 +8,6 @@ class TestModels(unittest.TestCase):
 
     def setUp(self):
         create_tables()
-        # Ensure the database is clean before each test
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('DELETE FROM articles')
@@ -94,5 +93,73 @@ class TestModels(unittest.TestCase):
         self.assertEqual(len(authors), 1)
         self.assertEqual(authors[0]['name'], "John Doe")
 
-if __name__ == '_main_':
+    def test_author_name_setter(self):
+        author = Author("John Doe")
+        author.name = "Jane Doe"
+        self.assertEqual(author.name, "Jane Doe")
+        with self.assertRaises(ValueError):
+            author.name = ""
+
+    def test_magazine_name_setter(self):
+        magazine = Magazine("Tech Weekly", "Technology")
+        magazine.name = "Health Monthly"
+        self.assertEqual(magazine.name, "Health Monthly")
+        with self.assertRaises(ValueError):
+            magazine.name = "A"
+
+    def test_magazine_category_setter(self):
+        magazine = Magazine("Tech Weekly", "Technology")
+        magazine.category = "Health"
+        self.assertEqual(magazine.category, "Health")
+        with self.assertRaises(ValueError):
+            magazine.category = ""
+
+    def test_article_content(self):
+        author = Author("John Doe")
+        magazine = Magazine("Tech Weekly", "Technology")
+        article = Article(title="Test Title", content="Test Content", author=author, magazine=magazine)
+        self.assertEqual(article.content, "Test Content")
+
+    def test_article_without_content(self):
+        author = Author("John Doe")
+        magazine = Magazine("Tech Weekly", "Technology")
+        with self.assertRaises(TypeError):
+            Article(title="Test Title", author=author, magazine=magazine)
+
+    def test_duplicate_author_name(self):
+        author1 = Author("John Doe")
+        author2 = Author("John Doe")
+        self.assertNotEqual(author1.id, author2.id)
+
+    def test_duplicate_magazine_name(self):
+        magazine1 = Magazine("Tech Weekly", "Technology")
+        magazine2 = Magazine("Tech Weekly", "Health")
+        self.assertNotEqual(magazine1.id, magazine2.id)
+
+    def test_magazine_no_articles(self):
+        magazine = Magazine("Tech Weekly", "Technology")
+        articles = magazine.articles()
+        self.assertEqual(len(articles), 0)
+
+    def test_author_no_articles(self):
+        author = Author("John Doe")
+        articles = author.articles()
+        self.assertEqual(len(articles), 0)
+
+    def test_magazine_no_contributors(self):
+        magazine = Magazine("Tech Weekly", "Technology")
+        contributors = magazine.contributors()
+        self.assertEqual(len(contributors), 0)
+
+    def test_magazine_no_article_titles(self):
+        magazine = Magazine("Tech Weekly", "Technology")
+        titles = magazine.article_titles()
+        self.assertIsNone(titles)
+
+    def test_magazine_no_contributing_authors(self):
+        magazine = Magazine("Tech Weekly", "Technology")
+        authors = magazine.contributing_authors()
+        self.assertIsNone(authors)
+
+if __name__ == 'main':
     unittest.main()

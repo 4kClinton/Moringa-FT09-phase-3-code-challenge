@@ -1,7 +1,7 @@
 from database.connection import get_db_connection
 
 class Magazine:
-    def __init__(self, name, category):  # Corrected __init_ method
+    def __init__(self, name, category): 
         self._name = name
         self._category = category
         self._id = None
